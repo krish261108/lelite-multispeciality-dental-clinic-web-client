@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lelite-multispeciality-dental-clinic-web-client.vercel.app/sitemap.xml
