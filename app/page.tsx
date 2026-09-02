@@ -1,78 +1,369 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
-import { ArrowUpRight, Check, ChevronDown, Clock3, Facebook, Instagram, MapPin, Menu, MessageCircle, Phone, ShieldCheck, Sparkles, Star, X } from "lucide-react";
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  CalendarDays,
+  Check,
+  ChevronDown,
+  Clock3,
+  Facebook,
+  Instagram,
+  MapPin,
+  Menu,
+  MessageCircle,
+  Phone,
+  Sparkles,
+  Star,
+  Stethoscope,
+  X,
+} from "lucide-react";
 
-const WA = "https://wa.me/919488133006";
+const WA = "https://wa.me/919488133006?text=Hello%20L%27ELITE%20Dental%20Care%2C%20I%27d%20like%20to%20book%20a%20dental%20appointment.";
 const IG = "https://www.instagram.com/elite_multispeciality_dental/?hl=en";
 const FB = "https://www.facebook.com/lelitedental/";
 const MAP = "https://www.google.com/maps/search/?api=1&query=242%20Mission%20St%2C%20MG%20Road%20Area%2C%20Puducherry%2C%20605001%2C%20India";
+const PHONE = "tel:+919488133006";
 
 const services = [
-  { n: "01", title: "Teeth Cleaning & Hygiene", text: "Gentle professional cleaning designed around comfort, sensitivity and long-term oral health.", tag: "PREVENTIVE CARE" },
-  { n: "02", title: "Orthodontics", text: "Thoughtful alignment care for a healthier, more confident smile, including modern clear-aligner options.", tag: "SMILE ALIGNMENT" },
-  { n: "03", title: "Root Canal Care", text: "Calm, carefully explained treatment with an emphasis on preserving your natural tooth.", tag: "RESTORATIVE" },
-  { n: "04", title: "Smile & Aesthetic Care", text: "Personalized smile-focused care, from whitening to aesthetic improvements that still feel like you.", tag: "AESTHETICS" },
+  {
+    number: "01",
+    title: "Teeth cleaning & hygiene",
+    copy: "Gentle professional cleaning that leaves your smile feeling fresh, polished and looked after.",
+    tag: "PREVENTIVE CARE",
+    icon: Sparkles,
+  },
+  {
+    number: "02",
+    title: "Orthodontics & aligners",
+    copy: "Thoughtful smile alignment with orthodontic care and clear-aligner options tailored to you.",
+    tag: "SMILE ALIGNMENT",
+    icon: ArrowUpRight,
+  },
+  {
+    number: "03",
+    title: "Root canal care",
+    copy: "Calm, careful treatment focused on preserving your natural tooth and keeping you comfortable.",
+    tag: "RESTORATIVE",
+    icon: Stethoscope,
+  },
+  {
+    number: "04",
+    title: "Smile & aesthetic care",
+    copy: "A considered approach to whitening and smile enhancement, designed around your natural features.",
+    tag: "AESTHETICS",
+    icon: Star,
+  },
 ];
 
-const testimonials = [
-  ["A calm, comfortable experience", "Patients repeatedly highlight the friendly team, clear explanations and reassuring atmosphere."],
-  ["Care that starts with listening", "Treatment is explained in understandable terms so you can make decisions with confidence."],
-  ["Modern care, personal attention", "A clean, welcoming environment paired with careful treatment and genuine patient comfort."],
+const promises = [
+  "Clear explanations before treatment",
+  "A calm, hygienic clinical environment",
+  "Modern digital dental care",
+  "Treatment planned around your comfort",
 ];
 
-function Logo() {
-  return <a href="#top" className="logo" aria-label="L'ELITE home"><span className="logo-mark">✦</span><span><b>L’ELITE</b><small>MULTISPECIALITY DIGITAL DENTAL CARE</small></span></a>;
+const reviews = [
+  {
+    quote: "The doctors were friendly, caring and explained the treatment clearly. The whole experience felt reassuring.",
+    meta: "PATIENT EXPERIENCE",
+  },
+  {
+    quote: "A comfortable clinic with attentive care. Everything was explained patiently and the treatment felt well planned.",
+    meta: "PATIENT EXPERIENCE",
+  },
+  {
+    quote: "Professional, hygienic and welcoming. The team made an appointment that can feel stressful much easier.",
+    meta: "PATIENT EXPERIENCE",
+  },
+];
+
+function BrandMark({ light = false }: { light?: boolean }) {
+  return (
+    <span className={`brand-mark ${light ? "brand-mark--light" : ""}`} aria-hidden="true">
+      <span className="brand-mark__a" />
+      <span className="brand-mark__b" />
+      <span className="brand-mark__c" />
+    </span>
+  );
 }
 
 function Reveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
-  return <motion.div className={className} initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: .7, delay, ease: [.22, 1, .36, 1] }}>{children}</motion.div>;
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 34 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.16 }}
+      transition={{ duration: 0.72, delay, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function DentalOrbit() {
+  return (
+    <div className="dental-orbit" aria-hidden="true">
+      <motion.div
+        className="dental-orbit__halo dental-orbit__halo--one"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
+      />
+      <motion.div
+        className="dental-orbit__halo dental-orbit__halo--two"
+        animate={{ rotate: -360 }}
+        transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+      />
+      <motion.div
+        className="tooth-hero"
+        animate={{ y: [0, -13, 0], rotate: [-2, 1.5, -2] }}
+        transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <div className="tooth-hero__crown">
+          <span className="tooth-hero__shine" />
+        </div>
+        <div className="tooth-hero__root tooth-hero__root--left" />
+        <div className="tooth-hero__root tooth-hero__root--right" />
+      </motion.div>
+      <div className="orbit-chip orbit-chip--top">DIGITAL CARE</div>
+      <div className="orbit-chip orbit-chip--bottom"><Sparkles size={13} /> GENTLE BY DESIGN</div>
+      <div className="orbit-dot orbit-dot--one" />
+      <div className="orbit-dot orbit-dot--two" />
+      <div className="orbit-dot orbit-dot--three" />
+    </div>
+  );
 }
 
 export default function Home() {
-  const [menu, setMenu] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const heroRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const smooth = useSpring(scrollYProgress, { stiffness: 80, damping: 22 });
-  const heroY = useTransform(smooth, [0, 1], [0, -120]);
-  const heroScale = useTransform(smooth, [0, 1], [1, 1.08]);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [heroActive, setHeroActive] = useState(true);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll();
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 80, damping: 24, mass: 0.45 });
+  const heroScale = useTransform(smoothProgress, [0, 0.16], [1, 0.94]);
+  const heroY = useTransform(smoothProgress, [0, 0.16], [0, -30]);
+  const heroOpacity = useTransform(smoothProgress, [0, 0.13, 0.2], [1, 1, 0]);
 
   useEffect(() => {
-    const fn = () => setProgress(window.scrollY / Math.max(1, document.documentElement.scrollHeight - window.innerHeight));
-    window.addEventListener("scroll", fn, { passive: true }); fn(); return () => window.removeEventListener("scroll", fn);
+    const update = () => {
+      const y = window.scrollY;
+      setHeroActive(y < Math.max(460, window.innerHeight * 0.72));
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
   }, []);
 
-  return <main id="top">
-    <motion.div className="scroll-progress" style={{ scaleX: progress }} />
-    <header className="nav"><Logo /><nav className={menu ? "nav-links open" : "nav-links"}><a href="#care" onClick={() => setMenu(false)}>Care</a><a href="#why" onClick={() => setMenu(false)}>Why L’Elite</a><a href="#reviews" onClick={() => setMenu(false)}>Reviews</a><a href="#visit" onClick={() => setMenu(false)}>Visit</a></nav><a className="nav-cta" href={WA} target="_blank" rel="noreferrer"><MessageCircle size={17}/> WhatsApp</a><button className="menu" onClick={() => setMenu(!menu)} aria-label="Toggle menu">{menu ? <X/> : <Menu/>}</button></header>
+  const heroProgress = useMemo(() => {
+    if (typeof window === "undefined") return 0;
+    return Math.min(1, Math.max(0, window.scrollY / Math.max(1, window.innerHeight * 0.72)));
+  }, [heroActive]);
 
-    <section ref={heroRef} className="hero">
-      <motion.div className="hero-bg" style={{ y: heroY, scale: heroScale }}><div className="hero-glow"/><div className="tooth-watermark">✦</div></motion.div>
-      <div className="hero-grid" />
-      <motion.div className="hero-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .8 }}>
-        <motion.div className="eyebrow" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .2 }}><span/> DIGITAL DENTAL CARE · PUDUCHERRY</motion.div>
-        <motion.h1 initial={{ opacity: 0, y: 35 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .3, duration: .9 }}>A healthier smile.<br/><em>A calmer experience.</em></motion.h1>
-        <motion.p initial={{ opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .45, duration: .7 }}>Modern multispeciality dentistry built around precision, comfort and the person in the chair.</motion.p>
-        <motion.div className="hero-actions" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .58 }}><a className="button primary" href={WA} target="_blank" rel="noreferrer">Book on WhatsApp <ArrowUpRight size={18}/></a><a className="button ghost" href="#care">Explore our care <ChevronDown size={17}/></a></motion.div>
-        <div className="hero-trust"><span><Star size={14} fill="currentColor"/> 5.0 Google rating</span><span>25+ patient reviews</span><span><ShieldCheck size={14}/> Patient-first care</span></div>
-      </motion.div>
-      <div className="hero-bottom"><span>SCROLL TO EXPLORE</span><div className="line"><i/></div><span>01 — 06</span></div>
-    </section>
+  const closeMenu = () => setMenuOpen(false);
 
-    <section className="intro section"><Reveal><div className="section-kicker">01 / THE L’ELITE APPROACH</div><h2>Dental care that feels <span>different.</span></h2></Reveal><Reveal delay={.08} className="intro-copy"><p>From a routine cleaning to more involved restorative or orthodontic care, every visit starts with the same idea: <strong>you should feel informed, comfortable and cared for.</strong></p><a className="text-link" href={WA} target="_blank" rel="noreferrer">Start a conversation <ArrowUpRight size={17}/></a></Reveal></section>
+  return (
+    <main className="site-shell">
+      <header className={`site-nav ${heroActive ? "site-nav--hero" : ""}`}>
+        <a className="brand" href="#top" aria-label="L'ELITE Dental Care home" onClick={closeMenu}>
+          <BrandMark light={heroActive} />
+          <span>
+            <strong>L&apos;ELITE</strong>
+            <small>MULTISPECIALITY DIGITAL DENTAL CARE</small>
+          </span>
+        </a>
+        <nav className={`desktop-nav ${menuOpen ? "desktop-nav--open" : ""}`} aria-label="Primary navigation">
+          <a href="#care" onClick={closeMenu}>Care</a>
+          <a href="#approach" onClick={closeMenu}>Approach</a>
+          <a href="#reviews" onClick={closeMenu}>Reviews</a>
+          <a href="#visit" onClick={closeMenu}>Visit</a>
+          <a className="nav-book" href={WA} target="_blank" rel="noreferrer" onClick={closeMenu}>Book appointment <ArrowUpRight size={15} /></a>
+        </nav>
+        <button className="mobile-menu" type="button" aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>
+          {menuOpen ? <X size={21} /> : <Menu size={21} />}
+        </button>
+      </header>
 
-    <section id="care" className="care section"><div className="section-head"><Reveal><div className="section-kicker">02 / SPECIALIST CARE</div><h2>Care for every<br/><span>stage of your smile.</span></h2></Reveal><Reveal delay={.12}><p>Focused treatment, clearly explained. Explore the services patients come to L’Elite for.</p></Reveal></div><div className="service-grid">{services.map((s, i) => <Reveal key={s.n} delay={i * .07}><article className="service-card"><div className="service-top"><span>{s.n}</span><Sparkles size={18}/></div><div><small>{s.tag}</small><h3>{s.title}</h3><p>{s.text}</p></div><a href={WA} target="_blank" rel="noreferrer" aria-label={`Ask about ${s.title}`}><ArrowUpRight/></a></article></Reveal>)}</div></section>
+      <section id="top" className="hero" ref={heroRef}>
+        <motion.div className="hero-stage" style={{ scale: heroScale, y: heroY, opacity: heroOpacity }}>
+          <div className="hero-grid" />
+          <div className="hero-glow hero-glow--one" />
+          <div className="hero-glow hero-glow--two" />
+          <div className="hero-copy">
+            <Reveal className="hero-kicker"><span className="eyebrow-dot" /> MODERN DENTISTRY · PUDUCHERRY</Reveal>
+            <motion.h1
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            >
+              Your smile,<br /><em>considered.</em>
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            >L&apos;ELITE brings calm, contemporary dental care to the heart of Puducherry — with clarity at every step.</motion.p>
+            <motion.div
+              className="hero-actions"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+            >
+              <a className="button button--gold" href={WA} target="_blank" rel="noreferrer">Book your visit <ArrowUpRight size={17} /></a>
+              <a className="text-link text-link--light" href="#care">Explore care <ArrowDownRight size={17} /></a>
+            </motion.div>
+          </div>
+          <DentalOrbit />
+          <div className="hero-meta">
+            <span><MapPin size={14} /> 242 Mission St · Puducherry</span>
+            <span>5.0 <Star size={12} fill="currentColor" /> · Patient rated</span>
+          </div>
+          <div className="hero-scroll">
+            <span>SCROLL TO EXPLORE</span>
+            <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 1.6, repeat: Infinity }}><ChevronDown size={17} /></motion.div>
+          </div>
+          <div className="hero-progress" aria-hidden="true"><span style={{ transform: `scaleX(${heroProgress})` }} /></div>
+        </motion.div>
+      </section>
 
-    <section id="why" className="why section"><div className="why-panel"><div className="why-orb"/><Reveal><div className="section-kicker light">03 / WHY L’ELITE</div><h2>Precision without<br/><em>the clinical coldness.</em></h2><p>Patients describe L’Elite as friendly, hygienic and reassuring — a place where treatment is explained rather than rushed.</p></Reveal><div className="checks"><Reveal delay={.1}><span><Check/> Clear treatment explanations</span></Reveal><Reveal delay={.16}><span><Check/> Comfort-first approach</span></Reveal><Reveal delay={.22}><span><Check/> Modern digital dentistry</span></Reveal><Reveal delay={.28}><span><Check/> Personal attention</span></Reveal></div></div><div className="why-side"><div className="stat"><strong>5.0</strong><span>Google rating</span><div className="stars">★★★★★</div></div><div className="quote">“A dental visit should leave you with more confidence than when you arrived.”</div></div></section>
+      <section className="intro section-pad" id="approach">
+        <div className="section-grid intro-grid">
+          <Reveal><span className="eyebrow">01 / THE L&apos;ELITE DIFFERENCE</span></Reveal>
+          <Reveal delay={0.08} className="intro-statement">
+            <h2>Dental care should feel <em>human.</em></h2>
+            <p>From a first consultation to ongoing care, we make the clinical side understandable — and the experience feel considered.</p>
+            <a className="text-link" href={WA} target="_blank" rel="noreferrer">Start a conversation <ArrowUpRight size={16} /></a>
+          </Reveal>
+        </div>
+        <div className="marquee" aria-hidden="true">
+          <motion.div animate={{ x: [0, -820] }} transition={{ duration: 24, repeat: Infinity, ease: "linear" }}>
+            <span>CALM CARE</span><i>✦</i><span>DIGITAL DENTISTRY</span><i>✦</i><span>YOUR COMFORT</span><i>✦</i><span>HEALTHY SMILES</span><i>✦</i><span>CALM CARE</span><i>✦</i>
+          </motion.div>
+        </div>
+      </section>
 
-    <section className="experience section"><Reveal><div className="section-kicker">04 / THE EXPERIENCE</div><h2>Designed around<br/><span>your comfort.</span></h2></Reveal><div className="experience-grid"><Reveal delay={.08} className="visual-card"><div className="visual-shape">✦</div><div className="visual-label"><small>L’ELITE / DIGITAL</small><b>Modern care.<br/>Human touch.</b></div></Reveal><div className="experience-copy">{["Listen", "Explain", "Treat"].map((x, i) => <Reveal key={x} delay={.1 + i * .08}><div className="step"><span>0{i+1}</span><div><h3>{x}</h3><p>{["We start by understanding what brought you in and what matters to you.", "You get a clear picture of the options, priorities and next steps.", "Treatment is delivered with attention to detail and patient comfort."][i]}</p></div></div></Reveal>)}</div></div></section>
+      <section className="services section-pad" id="care">
+        <div className="section-heading">
+          <Reveal><span className="eyebrow">02 / CARE, WITHOUT THE NOISE</span></Reveal>
+          <Reveal delay={0.06}><h2>Specialist care.<br /><em>Clear direction.</em></h2></Reveal>
+          <Reveal delay={0.1}><p>From prevention to restoration and smile alignment, every treatment starts with listening and a plan you understand.</p></Reveal>
+        </div>
+        <div className="service-list">
+          {services.map((service, index) => {
+            const Icon = service.icon;
+            return (
+              <motion.article
+                className="service-row"
+                key={service.number}
+                initial={{ opacity: 0, y: 35 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ duration: 0.7, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ x: 8 }}
+              >
+                <span className="service-number">{service.number}</span>
+                <div className="service-icon"><Icon size={22} /></div>
+                <div className="service-copy"><span>{service.tag}</span><h3>{service.title}</h3><p>{service.copy}</p></div>
+                <a href={WA} target="_blank" rel="noreferrer" aria-label={`Ask about ${service.title}`} className="service-arrow"><ArrowUpRight size={20} /></a>
+              </motion.article>
+            );
+          })}
+        </div>
+      </section>
 
-    <section id="reviews" className="reviews section"><Reveal><div className="section-kicker">05 / PATIENT VOICE</div><h2>Good dentistry is<br/><span>felt, not just seen.</span></h2></Reveal><div className="review-grid">{testimonials.map((t, i) => <Reveal key={t[0]} delay={i * .08}><article><div className="stars">★★★★★</div><h3>{t[0]}</h3><p>{t[1]}</p><small>Patient experience · L’Elite</small></article></Reveal>)}</div></section>
+      <section className="manifesto">
+        <div className="manifesto-noise" aria-hidden="true" />
+        <div className="section-grid manifesto-grid">
+          <Reveal><span className="eyebrow eyebrow--light">03 / OUR PROMISE</span></Reveal>
+          <Reveal delay={0.08} className="manifesto-main">
+            <h2>Good dentistry is<br /><em>felt before it&apos;s seen.</em></h2>
+            <p>We combine clinical precision with the small things that make a patient feel looked after: time, explanation, hygiene and a calm room.</p>
+          </Reveal>
+        </div>
+        <div className="promise-grid">
+          {promises.map((promise, index) => (
+            <Reveal key={promise} delay={index * 0.06} className="promise-item">
+              <span className="promise-icon"><Check size={14} /></span><span>{promise}</span>
+            </Reveal>
+          ))}
+        </div>
+      </section>
 
-    <section id="visit" className="visit section"><div className="visit-card"><Reveal><div className="section-kicker light">06 / FIND US</div><h2>Your smile is<br/><em>worth the visit.</em></h2><p>242, Mission St, MG Road Area<br/>Puducherry — 605001, India</p><div className="visit-actions"><a className="button light-button" href={MAP} target="_blank" rel="noreferrer"><MapPin size={17}/> Open in Google Maps</a><a className="button outline-button" href={WA} target="_blank" rel="noreferrer"><MessageCircle size={17}/> WhatsApp us</a></div></Reveal></div><div className="map-card"><div className="map-lines"/><MapPin className="pin" size={38}/><div className="map-label"><b>L’ELITE</b><span>Mission Street · Puducherry</span></div></div></section>
+      <section className="experience section-pad">
+        <div className="experience-visual" aria-hidden="true">
+          <div className="experience-panel experience-panel--back"><span>L&apos;ELITE</span><strong>Digital<br />Dental<br />Care</strong></div>
+          <motion.div className="experience-panel experience-panel--front" whileInView={{ rotate: -5, y: 0 }} initial={{ rotate: -10, y: 30 }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}>
+            <div className="experience-tooth"><div /><span /></div>
+            <span className="experience-caption">COMFORT / PRECISION / TRUST</span>
+          </motion.div>
+          <div className="experience-orb" />
+        </div>
+        <div className="experience-copy">
+          <Reveal><span className="eyebrow">04 / THE EXPERIENCE</span></Reveal>
+          <Reveal delay={0.06}><h2>Modern tools.<br /><em>Gentle hands.</em></h2></Reveal>
+          <Reveal delay={0.1}><p>Our digital-first approach is about more than equipment. It is about giving you a clearer picture of what is happening, what comes next and why.</p></Reveal>
+          <div className="experience-facts">
+            <div><strong>5.0</strong><span>Patient rating shown on Google</span></div>
+            <div><strong>242</strong><span>Mission Street, Puducherry</span></div>
+          </div>
+        </div>
+      </section>
 
-    <footer><div><Logo/><p>Multispeciality digital dental care<br/>in Puducherry.</p></div><div className="footer-links"><a href={WA} target="_blank" rel="noreferrer"><MessageCircle/> WhatsApp</a><a href={IG} target="_blank" rel="noreferrer"><Instagram/> Instagram</a><a href={FB} target="_blank" rel="noreferrer"><Facebook/> Facebook</a><a href="tel:+919488133006"><Phone/> +91 94881 33006</a></div><div className="copyright">© {new Date().getFullYear()} L’ELITE Multispeciality Digital Dental Care</div></footer>
-  </main>;
+      <section className="reviews section-pad" id="reviews">
+        <div className="section-heading section-heading--reviews">
+          <Reveal><span className="eyebrow">05 / PATIENT NOTES</span></Reveal>
+          <Reveal delay={0.06}><h2>Care that people<br /><em>remember.</em></h2></Reveal>
+        </div>
+        <div className="review-grid">
+          {reviews.map((review, index) => (
+            <Reveal key={review.quote} delay={index * 0.07} className="review-card">
+              <div className="stars" aria-label="5 out of 5 stars">{[0, 1, 2, 3, 4].map((star) => <Star key={star} size={14} fill="currentColor" />)}</div>
+              <blockquote>“{review.quote}”</blockquote>
+              <span>{review.meta}</span>
+            </Reveal>
+          ))}
+        </div>
+        <Reveal className="rating-strip">
+          <span>GOOGLE RATING</span><strong>5.0</strong><span className="rating-stars">★★★★★</span><span>25 reviews shown</span>
+        </Reveal>
+      </section>
+
+      <section className="visit section-pad" id="visit">
+        <div className="visit-card">
+          <div className="visit-map" aria-hidden="true">
+            <div className="map-grid" /><div className="map-road map-road--one" /><div className="map-road map-road--two" /><div className="map-pin"><MapPin size={22} /></div><span className="map-label">L&apos;ELITE · MISSION ST</span>
+          </div>
+          <div className="visit-copy">
+            <Reveal><span className="eyebrow eyebrow--light">06 / COME SEE US</span></Reveal>
+            <Reveal delay={0.06}><h2>Right in the heart<br /><em>of Puducherry.</em></h2></Reveal>
+            <Reveal delay={0.1}><p>242, Mission St, MG Road Area<br />Puducherry · 605001 · India</p></Reveal>
+            <div className="visit-actions">
+              <a className="button button--gold" href={MAP} target="_blank" rel="noreferrer"><MapPin size={16} /> Open in Maps</a>
+              <a className="button button--ghost" href={PHONE}><Phone size={16} /> +91 94881 33006</a>
+            </div>
+            <div className="visit-hours"><Clock3 size={16} /><span>Call or WhatsApp to confirm appointment availability.</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="cta section-pad">
+        <Reveal className="cta-inner">
+          <span className="eyebrow">07 / YOUR NEXT VISIT</span>
+          <h2>Let&apos;s make your<br /><em>next smile simple.</em></h2>
+          <p>Questions about cleaning, orthodontics, root canal care or your smile? Start with a message.</p>
+          <div className="cta-actions"><a className="button button--dark" href={WA} target="_blank" rel="noreferrer"><MessageCircle size={17} /> WhatsApp L&apos;ELITE</a><a className="text-link" href={PHONE}>Call the clinic <ArrowUpRight size={16} /></a></div>
+        </Reveal>
+      </section>
+
+      <footer className="footer">
+        <div className="footer-brand"><BrandMark /><strong>L&apos;ELITE</strong><span>Multispeciality Digital Dental Care</span></div>
+        <div className="footer-links"><a href={IG} target="_blank" rel="noreferrer"><Instagram size={17} /> Instagram</a><a href={FB} target="_blank" rel="noreferrer"><Facebook size={17} /> Facebook</a><a href={WA} target="_blank" rel="noreferrer"><MessageCircle size={17} /> WhatsApp</a></div>
+        <div className="footer-bottom"><span>© {new Date().getFullYear()} L&apos;ELITE Dental Care</span><span>Puducherry, India</span></div>
+      </footer>
+
+      <a className="floating-whatsapp" href={WA} target="_blank" rel="noreferrer" aria-label="Chat with L'ELITE Dental Care on WhatsApp"><MessageCircle size={21} /></a>
+    </main>
+  );
 }
